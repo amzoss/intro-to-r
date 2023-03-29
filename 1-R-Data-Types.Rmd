@@ -1,0 +1,788 @@
+---
+title: "R Data Types"
+author: "Angela Zoss"
+date: "`r Sys.Date()`"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r}
+
+# Loading required packages
+
+library(tidyverse)
+
+```
+
+## How to write R code
+
+R is a programming language that was originally designed for statistics.
+It's an old enough language that there are a bunch of variations to how
+you can accomplish any particular task.
+
+A couple of things are pretty consistent, though. Within any block of
+code you are running, R code is executed line by line, top to bottom.
+Also, R will either expect the full command to be on the same line, or
+you will have to be careful about where to add a line break. You are
+usually safe adding a line break after a comma, a left parenthesis `(`,
+or a left curly brace `{`.
+
+This won't matter too much for our simple examples, but when you have
+longer and longer operations, you will definitely want to break them up
+over multiple lines for readability.
+
+The simplest R code is just... typing some things and having R parrot
+them back to you.
+
+```{r}
+
+1
+
+```
+
+```{r}
+
+"Hello"
+
+```
+
+This also works for mathematical equations and other operations, but R
+will complete the operation first and then print out the answer.
+
+```{r}
+
+1 + 4
+
+```
+
+If you put multiple expressions in the same code chunk, you'll see the
+results underneath, one after the other.
+
+```{r}
+
+"Hello"
+
+3 + 4
+
+```
+
+## Creating Variables
+
+Eventually, though, you will want to store some of these things in the
+computers memory, or the R "environment." When you store a value or the
+result of an operation to the environment, you're creating a variable.
+
+In R, to create a variable, you start by typing the name of the
+variable, and then you use an assignment arrow (`<-`, or a `<` followed
+by a `-`) to assign some data to that variable.
+
+```{r}
+
+a <- 1
+
+b <- "one"
+
+```
+
+Note: creating a variable is kind of invisible. The new variable should
+show up in your Environment tab in RStudio, but R doesn't print anything
+out under the code chunk. If you also want to just see what got stored
+in the variable, you can type the variable name on its own.
+
+```{r}
+
+a
+
+b
+
+```
+
+There are basic rules about what you can use as a variable name in R.
+Generally, you can't use a '-' or a space in the variable name, you
+can't start the name with a number, and you can't include spaces. It is
+common in R code to replace spaces with periods (.) or underscores (\_).
+
+These rules, however, can be circumvented by surrounding the name with
+back tick marks (\`\`). While sometimes this can be useful, it also
+makes things harder because you will always have to use those ticks to
+call the variable.
+
+```{r}
+
+# Anything after a '#" on a line is a comment. It will be ignored by the processor.
+# I have commented out the examples that would lead to an error because the error
+# prevents any additional code from being processed.
+
+# 1a <- "doesn't work"
+
+# 1-a <- "doesn't work"
+
+# 1 a <- "doesn't work"
+
+`1a` <- "does work"
+
+`1-a` <- "does work"
+
+`1 a` <- "does work"
+
+`1a`
+
+`1-a`
+
+`1 a`
+
+```
+
+## Data Types
+
+Anything you store as a variable will be given a data type. The core
+data types for simple data objects are:
+
+-   character
+-   numeric
+-   logical (true/false)
+
+There are some more specific data types that build on these, like
+integer and date, but these simple ones, which are technically classes,
+are the most common. You can use `class()` to check the simple type of a
+variable. The `typeof()` function can show the more detailed data types.
+
+```{r}
+
+class(a)
+
+class(b)
+
+typeof(a)
+
+typeof(b)
+
+```
+
+> ### Sidebar: Using Functions
+>
+> The way functions work in R is pretty standard for programming
+> languages. The name of the function is followed immediately by the
+> left parenthesis `(`. Any inputs to the function come next, and then
+> you need to close the function with the right parenthesis `)`. You can
+> (and should!) write your own functions, but we can cover that later.
+
+## Vectors
+
+In R, the main way of collecting data items into a group is to create a
+vector. Vectors are specifically for items that are all the same data
+type, though.
+
+To create a vector, use the syntax `c()`. This is the "combine"
+function. Inside the parentheses, just list items separated by commas.
+
+```{r}
+
+sample_vector <- c(1, 3, 5, 7)
+
+sample_vector
+
+class(sample_vector)
+
+typeof(sample_vector)
+
+```
+
+Note: the class of a vector is the class of the items in the vector.
+Same with type.
+
+Inside the combine function, you can mix things you type with variables
+you've already created.
+
+```{r}
+
+sample_vector_2 <- c(b, "three", "five", "seven")
+
+sample_vector_2
+
+class(sample_vector_2)
+
+typeof(sample_vector_2)
+
+```
+
+But you can't have a vector that mixes data types. What do you think
+will happen with the following vector?
+
+```{r}
+
+sample_vector_3 <- c(1, "three", TRUE)
+
+```
+
+We didn't get an error, but we were trying to make a vector from a
+number, a string, and a boolean. Let's look at what got stored in the
+vector.
+
+```{r}
+
+sample_vector_3
+
+class(sample_vector_3)
+
+typeof(sample_vector_3)
+
+```
+
+R did what a lot of programming languages will do in this situation. It
+converted the data types on the fly. Everything can be represented by a
+string, so R used the character data type for everything.
+
+## Lists
+
+What if you do have data elements of different types and you want to
+combine them for some reason? R uses lists to combine mixed type
+objects.
+
+The great thing about vectors is that, when you know everything in a
+vector is the same type, you know that you can perform the same kind of
+operation on every item. That's not true with lists, but sometimes
+they're still useful.
+
+You can create a list with the `list()` function.
+
+```{r}
+
+sample_list <- list(1, "three", TRUE)
+
+sample_list
+
+class(sample_list)
+
+typeof(sample_list)
+
+```
+
+Each item in the list has an identifier, signified by two pairs of square brackets
+`[[]]`. They are just numbered in order.
+
+## Data Frames
+
+Data frames are the main data structure you'll be using for any work
+that uses tabular data. In essense, a data frame has rows and columns.
+The columns are all vectors, which means each column has to have
+elements of the same data type. But data frames also let you access data
+by rows.
+
+Many times, you'll just load data into a data frame from a data file,
+like a spreadsheet. But you can also create data frames manually. An
+easy way is to build vectors and then give them names as part of the
+`data.frame()` function.
+
+```{r}
+
+sample_dataframe <- data.frame(columnA = sample_vector, 
+                               columnB = sample_vector_2, 
+                               columnC = c("a", "b", "c", "d"))
+
+sample_dataframe
+
+
+```
+
+What happens if you try to create a data frame with vectors of different
+sizes?
+
+```{r}
+
+sample_dataframe_2 <- data.frame(columnA = sample_vector, 
+                               columnB = sample_vector_2, 
+                               columnC = c("a", "b", "c"))
+
+sample_dataframe_2
+
+```
+
+It makes sense that you'd get an error, trying to use two vectors of
+length four and one vector of length three. But be careful! Look at the
+next example.
+
+```{r}
+
+sample_dataframe_3 <- data.frame(columnA = sample_vector, 
+                               columnB = sample_vector_2, 
+                               columnC = c("a", "b"))
+
+sample_dataframe_3
+
+```
+
+No error! What happened?
+
+Because the final column has a length of two, and the others are length
+four, R decided to use two copies of the vector in column C. If that's
+not what you want, you should be very careful to specify every value in
+every column.
+
+Another thing to note about data frames is that they are more particular
+about column names than our variable samples above. Even if we use the
+\` character to surround column names, we still can't have column names
+with spaces or dashes, or have ones that start with a number.
+
+```{r}
+
+sample_dataframe_4 <- data.frame(`column A` = sample_vector, 
+                               `column-B` = sample_vector_2, 
+                               `3column` = c("a", "b", "c", "d"))
+
+sample_dataframe_4
+
+```
+
+Data frames are the basic data structure used for tabular data. Very
+soon, we're going to be working with a more sophisticated version of a
+data frame called a `tibble`. This is the type of data frame that is
+created when using the `tidyverse` packages to do data science.
+
+Sometimes, for small data sets, you may just want to be able to type out
+a comma-separated table and load it in as a data frame. The tidyverse
+way of doing that is `tribble()`. A couple of notes: \* the column names
+in the first row need to begin with a `~`; that won't be included as
+part of the name, though. \* each line also needs to end with a comma,
+except for the last one
+
+```{r}
+
+sample_tibble <- tribble(
+  ~`column A`, ~`column-B`, ~`3column`,
+  1, "one", "a",
+  3, "three", "b",
+  5, "five", "c",
+  7, "seven", "d"
+)
+
+sample_tibble
+
+```
+
+Bonus - the tibble that is created uses the actual names we specified!
+But even if you're just starting with the basic data frame, all of the
+tidyverse operations will still work fine.
+
+## Bonus: Named Vectors
+
+Somewhere in between a vector and a data frame is a named vector. It's a vector
+where each item also has a name. It's hard to explain generally why you might need
+something like this, but they can come in handy in certain parts of data work.
+
+Creating a named vector is like creating a data frame, but you just assign one
+value to each name.
+
+```{r}
+
+sample_named_vector <- c("alpha" = 1, "beta" = 2, "gamma" = 3, "delta" = 4)
+
+sample_named_vector
+
+class(sample_named_vector)
+
+typeof(sample_named_vector)
+
+```
+
+See how even with strings being used to name the elements, the vector is still a 
+numeric vector at its core.
+
+## Bonus Bonus: Named Lists
+
+A named list is like something that might be called an object in another programming
+language. You can store whatever you want in each name, and they will all be contained
+within the named list.
+
+```{r}
+
+sample_named_list <- list("alpha" = 1, "beta" = "three", "gamma" = TRUE)
+
+sample_named_list
+
+class(sample_named_list)
+
+typeof(sample_named_list)
+
+```
+
+When R prints the named list, each name shows up after a dollar sign `$` (e.g., `$alpha`), 
+instead of having a position-based identifier (e.g., `[[1]]`).
+
+## Accessing Data: Vectors
+
+Okay, once we have combined data elements into larger structures like vectors,
+we need to know how to get them back out again. With vectors, you can use square
+brackets `[]` and the position of the value. In R, unlike Python, you count the
+position starting with 1.
+
+
+```{r}
+
+sample_vector[1]
+
+sample_vector_2[2]
+
+```
+
+Using a negative position excludes the item at that position.
+
+```{r}
+
+sample_vector[-4]
+
+sample_vector_2[-2]
+
+```
+
+
+If you want multiple items, you can specific a vector of positions.
+
+```{r}
+
+sample_vector[c(1,4)]
+
+sample_vector[c(-1,-4)]
+
+```
+
+What if you want all of the numbers up to, or after, a certain position? R uses the
+colon `:` character to specify a range of integers. This also works if you want to 
+exclude a range.
+
+Order matters for positive number ranges.
+
+```{r}
+
+sample_vector[1:3]
+
+sample_vector[3:1]
+
+sample_vector[-2:-3]
+
+sample_vector[-3:-2]
+
+```
+
+This way of including and excluding items is basically the same as saying yes or
+no to different items in the vector. We can actually use a vector of boolean 
+values to do the same thing. (This may not seem useful right now, but bear with me.)
+
+```{r}
+
+sample_vector[c(TRUE, FALSE, TRUE, FALSE)]
+
+# Alternate way of typing TRUE and FALSE
+
+sample_vector_2[c(F, F, T, T)]
+
+```
+
+Now lets say we want to subset a vector by some kind of test or condition - all
+of the numbers above a certain value, for examples.
+
+First, let's test the vector elements to see if they meet a condition, like
+being greater than 4.
+
+```{r}
+
+sample_vector > 4
+
+```
+
+So, what is happening here? We typed an operation, and R evaluated that operation
+and printed the result. We asked if a vector was greater than 4, but what R
+calculated was whether each item in the vector is greater than 4. This is our
+first example of a **vectorized operation** - taking an operation that is meant to work
+on a single item and applying it to a whole vector instead. This is a very efficient
+way of performing data operations, and it's very common in R to be able to do this.
+
+In vectorized operations like this, you start with a vector, perform some operation
+or test on each item, then return a vector of the results for each item. What we
+have above is a vector saying, "1 is not greater than 4, 3 is not greater than 4,
+5 is greater than 4, 7 is greater than 4."
+
+But we know we can use a vector of boolean values to subset a list. So, let's take
+our `> 4` test and insert it into our square brackets to subset the original vector.
+
+```{r}
+
+sample_vector[sample_vector > 4]
+
+```
+
+This is saying "Subset sample_vector based on the results of testing each element
+in the vector on whether it is greater than 4."
+
+This is a bit redundant, and you have to remember this confusing pattern to be able 
+to use it. It does allow for some funny (useful?) things, though, like mixing vectors.
+
+```{r}
+
+sample_vector_2[sample_vector > 4]
+
+```
+
+
+## Accessing Data: Named Vectors
+
+If you have a named vector, you can still use position and logic to subset the vector,
+but you can also use the names. This is a great feature of named vectors, since
+it is much harder to get a name wrong than a numerical position.
+
+```{r}
+
+sample_named_vector[c(1,3)]
+
+sample_named_vector[c("beta","delta")]
+
+sample_named_vector[sample_named_vector == 3]
+
+```
+
+## Accessing Data: Lists
+
+For unnamed lists, we're back to using position, or maybe equality. But you 
+do have two options. You can take the list and limit it to certain items, or
+you can remove an item from the list and get it back in its original form
+
+```{r}
+
+sample_list[2]
+
+class(sample_list[2])
+
+sample_list[[3]]
+
+class(sample_list[[3]])
+
+```
+
+In the first example, `sample_list[2]`, we are saying, "Include the 2nd element only,
+but still give me a list." This actually returns a list of one element, and that element
+has gotten a new automatic identifier with a position of 1 (`[[1]]`).
+
+In the second example, we use two sets of square brackets, which tells R we want
+to drill all the way down to the original element. It prints out `TRUE`, and we 
+can confirm that the returned value has a class of "logical," or boolean.
+
+We can still ask for multiple items using the first method, but not the second.
+We'd have to get the individual items and then reconsititute the list.
+
+```{r}
+
+sample_list[c(1,3)]
+
+# doesn't work
+# sample_list[[c(1,3)]]
+
+list(sample_list[[1]], sample_list[[3]])
+
+```
+
+Now, our previous trick of testing vector elements based on whether they're greater
+than some number is harder with a list. Each list element could be a different class.
+
+One thing we could try is to limit the list just to elements of a certain class. There
+are a bunch of functions in R that test if an element is a particular data type, like
+`is.character()` and `is.numeric()`. Let's try one on a list.
+
+```{r}
+
+
+is.numeric(sample_list)
+is.character(sample_list)
+is.logical(sample_list)
+
+
+```
+
+Unfortunately, that approach doesn't work. Functions may be vectorized, meaning that
+they work over elements in a vector, but lists by their nature are so complex that
+functions will normally treat them as a whole object. We can iterate over list
+items, but that's a more advanced topic than we'll cover here.
+
+
+## Accessing Data: Named Lists
+
+Square brackets will also work here, and the rules are the same as with positions.
+You just have to surround the item name in quotes.
+
+```{r}
+
+# prints both the identifier and the value; identifier has not changed because
+# identifier isn't tied to position anymore
+sample_named_list["alpha"]
+
+# prints just the original item, the string "three"
+sample_named_list[["beta"]]
+
+# prints a named list, reduced to just two named items - alpha and gamma
+sample_named_list[c("alpha","gamma")]
+
+# doesn't work
+# sample_named_list[[c("alpha","gamma")]]
+
+```
+
+But just like we saw with unnamed lists, R is actually giving us useful information when it 
+prints out the named list. It uses `$` before the name of each list item, and that
+is also how we can access those items directly. This syntax returns the item itself,
+like the double square brackets.
+
+```{r}
+
+sample_named_list$alpha
+
+sample_named_list$beta
+
+```
+
+If you have weird names, the dollar sign can be tricky. But you can still use
+tick marks to surround the weird name. 
+
+```{r}
+
+sample_named_list_2 <- list(`weird 1` = 5, `2weird` = 6)
+
+sample_named_list_2$`weird 1`
+
+sample_named_list_2[["weird 1"]]
+
+```
+
+## Accessing Data: Data Frames
+
+Now that you're starting to learn about how R represents different kinds of
+data structures, let's look at our environment. We have two sections: "Data" at
+the top and "Values" at the bottom. In the Data section, we have data frames
+and lists. In the Values section we have vectors and individual data elements.
+
+Focusing in on the Data section, use the arrow on the left to expand a data frame.
+Then expand a list. In each case we see the different elements of the structure,
+one per row, sometimes with a name and sometimes without. What else do you notice?
+
+Under both lists and data frames, we see a `$` at the beginning of every row.
+
+We've already seen we can access the named elements of a list using `$`. It turns
+out, the same is true for data frames.
+
+```{r}
+
+sample_dataframe$columnA
+
+```
+
+
+Can you guess why that is? What does that say about data frames?
+
+...
+
+..
+
+.
+
+A data frame is a list! A named list!
+
+What makes it different? What are the constraints for a data frame that don't exist
+for a list?
+
+...
+
+..
+
+.
+
+A data frame is a (named) list of vectors! Each column is a separate element
+in the list, and each column must be a vector. But different columns can have
+different data types, just like different elements in a normal list.
+
+Because a data frame is a list, you can use either position or name to access columns.
+And you can use either `$` or `[]`.
+
+
+```{r}
+
+sample_dataframe[1]
+sample_dataframe["columnB"]
+sample_dataframe[c(1,3)]
+sample_dataframe[-2]
+
+```
+
+Just like with a list, using the dollar sign with a data frame returns a vector. So does `[[]]`, using either position or name.
+
+```{r}
+
+sample_dataframe$columnB
+sample_dataframe[[1]]
+sample_dataframe[["columnC"]]
+
+```
+
+
+Just like with lists, you can't pass a vector of two numbers to `[[]]`.
+
+```{r}
+
+sample_dataframe[c(1,3)]
+
+```
+
+
+
+Data frames also have an option I think of as "matrix" syntax. In square brackets `[]`, you can actually use two numbers separated by a comma to select a specific row and column, respectively.
+
+```{r}
+
+sample_dataframe[1,2]
+
+```
+
+If you want the entire column, you can skip the number for the row, and vice versa.
+
+```{r}
+
+sample_dataframe[,2]
+
+sample_dataframe[3,]
+
+
+```
+
+In the first case, grabbing the column, you get just the vector and not a data frame. But grabbing the row, you get a data frame. Why might that be?
+
+...
+
+..
+
+.
+
+Columns are strictly typed, because they are vectors by definition. So you always 
+know the elements in a column are a vector at the core, and that's what this syntax
+returns. But row elements could all be different types, so they can't come back as
+a vector. The safe thing to do is to keep them in a data frame. You could imagine
+getting a list back, but a data frame is actually better because we know that each
+column has the same number of rows, and we might want to do more data frame operations on those rows, especially if we requested a range of rows.
+
+```{r}
+
+sample_dataframe[c(1,3),]
+
+```
+
+We could keep going with this syntax and how you can subset more creatively using
+logical tests, but I think the tidyverse has better methods than this. 
+
+Also, it is possible to set row names for data frames. You could identify a column
+that acts like an index of the data, one that has a unique identifier for each row.
+That column could be used for row names, and then you could use name-based subsetting
+like we do for columns. In practice, though, you don't often want to isolate rows
+by their identifier. More commonly you want to isolate them based on patterns in the
+data. We're going to look at the `tidyverse` solutions now, and you can still do both:
+identify a particular row based on its identifier, and also look for groups of rows
+that meet some kind of data condition.
+
+Let's move on.
