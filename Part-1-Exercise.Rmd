@@ -1,0 +1,346 @@
+---
+title: "Basic Data Loading and Transformation"
+author: "Angela Zoss"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+
+# Run the first time you start working with this file
+
+install.packages("tidyverse")
+
+
+```
+
+```{r}
+
+# Loading required packages
+
+library(tidyverse)
+
+```
+
+## Loading data
+
+The `tidyverse` comes with some built-in data loading functions that I recommend
+over the ones that are included in base R. The ones I use most commonly are `read_csv`
+and `read_xlsx`, which is actually in a separate package called `readxl`. 
+
+Both of these functions can load data either from a local data file or from something
+shared on the web. Let's grab the dataset from the Open Refine lesson for Library Carpentries.
+
+```{r}
+
+lc_open_refine <- read_csv(
+  'https://github.com/LibraryCarpentry/lc-open-refine/raw/gh-pages/data/doaj-article-sample.csv',
+  col_types = cols(.default = "c", Date = col_date(format="%m/%d/%Y")) 
+  )
+
+```
+
+The `read_csv()` function does a few things automatically. It assumes that the first 
+row of the dataset contained the column names. It can also each column to try to guess 
+the data type. Usually the tidyverse data reading functions do a great job of guessing
+data types, but you can also specify them manually if you need to. Here, I specified
+that Date is a date but all others are character variables.
+
+## Explore a dataset
+
+To see the contents of a variable, we can start by just typing the name of the variable.
+
+```{r, echo=TRUE}
+
+lc_open_refine
+
+```
+
+With data frames, though, there are a couple of additional functions that can be helpful.
+Try the following commands to see what kind of information they provide.
+
+### Summarize a dataset
+
+```{r, echo=TRUE}
+
+summary(lc_open_refine)
+
+```
+
+### Glimpse a dataset
+
+```{r, echo=TRUE}
+
+glimpse(lc_open_refine)
+
+```
+
+Now, let's say we've identified a few columns that need a bit of data processing.
+Let's walk through working on a few specific columns.
+
+## `select()` for isolating columns
+
+If you've already learned about accessing data using base R capabilities, you may
+have used `$` or `[]` or `[[]]` to grab one of the columns in a data frame. Instead of 
+teaching those, I'm going to skip ahead to the tidyverse functions.
+
+The `select()` function has a wide variety of ways to specify the columns you want.
+Let's start with names. To select by name, all you have to do is list all of the
+column names you want, separated by commas. The first argument in the function
+will always be the name of the data frame.
+
+Try selecting the DOI column.
+
+```{r}
+
+select(lc_open_refine, DOI)
+
+```
+
+Now, let's pretend we need to remove any rows where the DOI is empty.
+
+## Find and remove rows with missing DOIs
+
+In `tidyverse`, the function for retrieving a set of rows is `filter()`. Usually, 
+if you're limiting a dataset to a subset of rows, you want to do it on some specific
+criteria, usually related to the data.
+
+
+### Step 1: Isolating groups of rows by a condition
+
+The general pattern is:
+
+`filter(data_frame, some test for the rows)`
+
+How to test if values are null?
+
+`is.na(name_of_column)`
+
+Combine these to find the NA values in the DOI column:
+
+```{r, echo=TRUE}
+
+filter(lc_open_refine, is.na(DOI))
+
+```
+
+But we want to remove the NAs, not all of the other rows. How do we get the opposite?
+
+We can use `!` to get the negative of a test.
+
+`!is.na(name_of_column)`
+
+Or, in this case:
+
+```{r, echo=TRUE}
+
+filter(lc_open_refine, !is.na(DOI))
+
+```
+
+The tidyverse actually has a handy function that does this: drop_na()
+
+```{r, echo=TRUE}
+
+drop_na(lc_open_refine, DOI)
+
+```
+
+## Fix inconsistencies in Language
+
+When we're exploring a new data set, we might want to ask questions like: What are the unique values of a column? How many records are there for each value?
+
+Tidyverse also has a handy function for this: `count()`.
+
+`count(data_frame, name_of_column)`
+
+Let's use `count()` to summarize the Language column.
+
+```{r, echo=TRUE}
+
+count(lc_open_refine, Language)
+
+```
+
+This shows an inconsistency in some of the records. We need to edit the data
+values to standardize them.
+
+### How to edit a variable: mutate
+
+The `mutate()` function allows you to make changes to an existing variable or to
+create a new variable. The general pattern is:
+
+`mutate(data_frame, name_of_column = new value or expression)`
+
+We know we need to mutate the Language column, but we have to come up with an 
+expression that will do the right mutation. What should the expression do?
+
+* If the Language is "English", change to "EN"
+* Otherwise, leave the original value
+
+There are multiple ways we could accomplish this in R. Here are a couple of options:
+
+* Use a simple if/then statement to look for "English" and replace it when we find
+* Use a simple string replace to look for "English" and replace it when we find
+
+### Option 1: If/then
+
+R has a more complicated way of writing if-then statements. The `ifelse()` function 
+is a simple version that works really well with the mutate function. The general 
+pattern is:
+
+`ifelse(test, what to do if true, what to do if false)`
+
+So, in this case, we will want a statement like this:
+
+`ifelse(Language == "English", "EN", Language)`
+
+### Option 2: String replacement
+
+String replacement is similar, but it's more flexible. The function `str_replace()`
+will look for English, even if it's not the full contents of the cell in the table.
+
+`str_replace(text, what to replace, what to use instead)`
+
+In our case, we'll want a statement like this:
+
+`str_replace(Language, "English", "EN")`
+
+Now that we have our expression, we need to plug it into the `mutate()` function.
+
+```{r, echo=TRUE}
+
+mutate(lc_open_refine, Language = ifelse(Language == "English", "EN", Language))
+
+```
+
+Or, if we're using option 2:
+
+```{r, echo=TRUE}
+
+mutate(lc_open_refine, Language = str_replace(Language, "English", "EN"))
+
+```
+
+## Fix inconsistencies in Publisher
+
+Next let's check out the Publisher column. Try using `count()` to explore the categories.
+
+```{r, echo=TRUE}
+
+count(______)
+
+```
+
+What needs to be fixed? Can you think of a string replacement that will work?
+
+
+```{r, echo=TRUE}
+
+mutate(lc_open_refine, Publisher = str_replace(Publisher, "", ""))
+
+```
+
+## Chaining operations
+
+### The magrittr pipe
+
+`%>%`
+
+This symbol is called a pipe, and it was originally developed for a package
+called magrittr. (Many R packages end with a single r, rather than "er.")
+
+The pipe works by taking whatever the result of the previous command is and injecting
+or piping it straight into the next command. Let's start with a simple example.
+
+```{r, echo=TRUE}
+
+class("a")
+
+"a" %>% class()
+
+```
+
+class() is a basic function that returns the class of a data element in R: `class()`.
+Inside the parentheses, you would normally type the variable name or the data element
+you want to find the class of. If you want to use the pipe, though, you could start
+with the data element and then pipe it to the `class()` function.
+
+Those two statements are identical. When you use the pipe, whatever was on the left
+side of the pipe gets inserted into the parentheses of the function on the right.
+
+## Create a single chain of data transformations to remove null DOIs and fix the Language and Publisher columns
+
+First, let's take the data set and pipe it to a function that will drop the NAs in 
+the DOI column.
+
+```{r, echo=TRUE}
+
+lc_open_refine %>% drop_na(DOI)
+
+```
+
+Next, add another step to change "English" to "EN" in Language.
+
+```{r, echo=TRUE}
+
+lc_open_refine %>% drop_na(DOI) %>% mutate(Language = str_replace(Language, "English", "EN"))
+
+```
+
+To avoid long lines, you can start a new line after a pipe.
+
+```{r, echo=TRUE}
+
+lc_open_refine %>% 
+  drop_na(DOI) %>% 
+  mutate(Language = str_replace(Language, "English", "EN"))
+
+```
+
+Finally, add a link that will fix the Publisher space problem.
+
+```{r, echo=TRUE}
+
+lc_open_refine %>% 
+  drop_na(DOI) %>% 
+  mutate(Language = str_replace(Language, "English", "EN")) %>%
+  ___________
+
+```
+
+The pipeline is working, but the transformed data aren't getting saved anywhere,
+they're just getting printed. Let's pick a new name and save the whole pipeline
+to that new variable.
+
+```{r, echo=TRUE}
+
+lc_open_refine_transformed <- lc_open_refine %>% 
+  ____________ %>%
+  ____________ %>%
+  ____________
+
+```
+
+## Export the transformed data
+
+After a successful data transformation sequence, you may want to save the file out.
+In the tidyverse, we can do this easily with `write_csv()`.
+
+
+```{r, echo=TRUE, eval=FALSE}
+
+write_csv(lc_open_refine_transformed, "lc_open_refine_transformed.csv")
+
+```
+
+A note of warning, though: NAs are saved in the file as "NA" by default. I often
+change these to empty string "" for simplicity.
+
+```{r, echo=TRUE, eval=FALSE}
+
+write_csv(lc_open_refine_transformed, "lc_open_refine_transformed.csv", na="")
+
+```
+
+

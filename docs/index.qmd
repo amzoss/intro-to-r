@@ -4,23 +4,471 @@ author: "Angela Zoss"
 format: revealjs
 ---
 
-## Quarto
+## Setup
 
-Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
+* Go to Duke's [Virtual Computing Manager](https://vcm.duke.edu/) and click on
+**"Reserve a Container"**
+* Click on **"reserve RStudio"**
+* Now on the left, under "Containers," select the new **RStudio** container
+* Click on **"Login"**
 
-## Bullets
+## RStudio
 
-When you click the **Render** button a document will be generated that includes:
+Development in RStudio:
 
--   Content authored with markdown
--   Output from executable code
+* Write code in the "console"
+* Write code in a file
 
-## Code
+## Writing R code
 
-When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
+* Type things on a line and R will execute and print the results
+* Can break the line if it gets too long, but has to be after something
+like a comma, (, or [.
 
-```{r}
-1 + 1
+::: {.notes}
+
+R is a programming language that was originally designed for statistics.
+It's an old enough language that there are a bunch of variations to how
+you can accomplish any particular task.
+
+A couple of things are pretty consistent, though. Within any block of
+code you are running, R code is executed line by line, top to bottom.
+Also, R will either expect the full command to be on the same line, or
+you will have to be careful about where to add a line break. You are
+usually safe adding a line break after a comma, a left parenthesis `(`,
+or a left curly brace `{`.
+
+This won't matter too much for our simple examples, but when you have
+longer and longer operations, you will definitely want to break them up
+over multiple lines for readability.
+
+The simplest R code is just... typing some things and having R parrot
+them back to you.
+
+:::
+
+## Play around in the console
+
+* Type a number
+* Type a math equation
+* Type a letter
+
+## Create a new R Markdown file
+
+* File -> New File -> R Markdown...
+* Keep the defaults
+* Works like a Jupyter Notebook in Python:    
+a mix of Markdown-formatted text and blocks of code
+
+## Write code in a code chunk
+
+* Insert a new (R) code chunk
+* Type a few lines of simple code
+* Click the play button to execute the whole chunk
+
+::: {.notes}
+
+If you put multiple expressions in the same code chunk, you'll see the
+results underneath, one after the other.
+
+:::
+
+## Creating Variables
+
+
+::: {style="padding-top: 2em;"}
+
+`name_of_variable <- value or expression`
+
+:::
+
+::: {.notes}
+
+Eventually, though, you will want to store some of these things in the
+computers memory, or the R "environment." When you store a value or the
+result of an operation to the environment, you're creating a variable.
+
+In R, to create a variable, you start by typing the name of the
+variable, and then you use an assignment arrow (`<-`, or a `<` followed
+by a `-`) to assign some data to that variable.
+
+:::
+
+## Inspecting Variables
+
+
+::: {style="padding-top: 2em;"}
+
+`name_of_variable`
+
+`class(name_of_variable)`
+
+`typeof(name_of_variable)`
+
+:::
+
+## R Functions
+
+::: {style="padding-top: 2em;"}
+
+`name_of_function(optional inputs)`
+
+::: 
+
+## Asking for help
+
+::: {style="padding-top: 2em;"}
+
+`?name_of_function`
+
+::: 
+
+# Starting the Tibble Talk Exercise
+
+## Loading the tidyverse package
+
+```{r, echo=TRUE}
+
+library(tidyverse)
+
+```
+
+## Loading data
+
+```{r, echo=TRUE}
+
+lc_open_refine <- read_csv(
+  'https://github.com/LibraryCarpentry/lc-open-refine/raw/gh-pages/data/doaj-article-sample.csv',
+  col_types = cols(.default = "c", Date = col_date(format="%m/%d/%Y")) 
+  )
+
+```
+
+::: {.notes}
+
+The `tidyverse` comes with some built-in data loading functions that I recommend
+over the ones that are included in base R. The ones I use most commonly are `read_csv`
+and `read_xlsx`, which is actually in a separate package called `readxl`. 
+
+Both of these functions can load data either from a local data file or from something
+shared on the web. Let's grab the dataset from the Open Refine lesson for Library Carpentries.
+
+The `read_csv()` function does a few things automatically. It assumes that the first 
+row of the dataset contained the column names. It can also test each column to try to guess 
+the data type. Usually the tidyverse data reading functions do a great job of guessing
+data types, but you can also specify them manually if you need to. Here, I specified
+that Date is a date but all others are character variables.
+
+:::
+
+## Explore a dataset
+
+```{r, echo=TRUE}
+
+lc_open_refine
+
+```
+
+## Summarize a dataset
+
+```{r, echo=TRUE}
+
+summary(lc_open_refine)
+
+```
+
+## Glimpse a dataset
+
+```{r, echo=TRUE}
+
+glimpse(lc_open_refine)
+
+```
+
+## Inspect a column
+
+::: {style="padding-top: 2em;"}
+
+`select(data_frame, name_of_column)`
+
+::: 
+
+## Try selecting the DOI column
+
+```{r, echo=TRUE, eval=FALSE}
+
+select(lc_open_refine, DOI)
+
+```
+
+# Find and remove rows with missing DOIs
+
+## Step 1: Isolating groups of rows by a condition
+
+::: {style="padding-top: 2em;"}
+
+`filter(data_frame, some test for the rows)`
+
+::: 
+
+## How to test if values are null?
+
+::: {style="padding-top: 2em;"}
+
+`is.na(name_of_column)`
+
+::: 
+
+## Find the NA values in the DOI column
+
+::: {style="padding-top: 2em;"}
+
+`filter(lc_open_refine, is.na(DOI))`
+
+:::
+
+---
+
+```{r, echo=TRUE}
+
+filter(lc_open_refine, is.na(DOI))
+
+```
+
+## How do we get the opposite?
+
+::: {style="padding-top: 2em;"}
+
+`!is.na(name_of_column)`
+
+`filter(lc_open_refine, !is.na(DOI))`
+
+::: 
+
+---
+
+```{r, echo=TRUE}
+
+filter(lc_open_refine, !is.na(DOI))
+
 ```
 
 
+## Alternative: drop_na()
+
+```{r, echo=TRUE}
+
+drop_na(lc_open_refine, DOI)
+
+```
+
+# Fix inconsistencies in Language
+
+## What are the unique values of a column? And how many records in each?
+
+::: {style="padding-top: 2em;"}
+
+`count(data_frame, name_of_column)`
+
+::: 
+
+---
+
+```{r, echo=TRUE}
+
+count(lc_open_refine, Language)
+
+```
+
+## How to edit a variable: mutate
+
+::: {style="padding-top: 2em;"}
+
+`mutate(data_frame, name_of_column = new value or expression)`
+
+::: 
+
+## What should the expression do?
+
+* If the Language is "English", change to "EN"
+* Otherwise, leave the original value
+
+## A couple of options
+
+* Simple if/then statement
+* String replace
+
+## If/then
+
+::: {style="padding-top: 2em;"}
+
+`ifelse(test, what to do if true, what to do if false)`
+
+`ifelse(Language == "English", "EN", Language)`
+
+::: 
+
+## String replacement
+
+::: {style="padding-top: 2em;"}
+
+`str_replace(text, what to replace, what to use instead)`
+
+`str_replace(Language, "English", "EN")`
+
+:::
+
+## Back to mutate()
+
+```{r, echo=TRUE}
+
+mutate(lc_open_refine, Language = ifelse(Language == "English", "EN", Language))
+
+```
+
+## Alternative
+
+```{r, echo=TRUE}
+
+mutate(lc_open_refine, Language = str_replace(Language, "English", "EN"))
+
+```
+
+# Fix inconsistencies in Publisher
+
+## Explore values in Publisher
+
+```{r, echo=TRUE}
+
+count(lc_open_refine, Publisher)
+
+```
+
+## What needs to be fixed?
+
+`MDPI  AG` 
+
+should be 
+
+`MDPI AG`
+
+## Maybe just replace two spaces with one?
+
+```{r, echo=TRUE}
+
+mutate(lc_open_refine, Publisher = str_replace(Publisher, "  ", " "))
+
+```
+
+# Chaining operations
+
+## The magrittr pipe
+
+::: {style="font-size: 200%;"}
+
+`%>%`
+
+:::
+
+
+::: {.notes}
+
+This symbol is called a pipe, and it was originally developed for a package
+called magrittr. (Many R packages end with a single r, rather than "er.")
+
+The pipe works by taking whatever the result of the previous command is and injecting
+or piping it straight into the next command. Let's start with a simple example.
+
+:::
+
+---
+
+```{r, echo=TRUE}
+
+class("a")
+
+"a" %>% class()
+
+```
+
+
+::: {.notes}
+
+class() is a basic function that returns the class of a data element in R: `class()`.
+Inside the parentheses, you would normally type the variable name or the data element
+you want to find the class of. If you want to use the pipe, though, you could start
+with the data element and then pipe it to the `class()` function.
+
+Those two statements are identical. When you use the pipe, whatever was on the left
+side of the pipe gets inserted into the parentheses of the function on the right.
+
+:::
+
+# Create a single chain of data transformations to remove null DOIs and fix the Language and Publisher columns
+
+## First, drop NAs in DOI
+
+```{r, echo=TRUE}
+
+lc_open_refine %>% drop_na(DOI)
+
+```
+
+## Next, add another step to change "English" to "EN" in Language
+
+```{r, echo=TRUE}
+
+lc_open_refine %>% drop_na(DOI) %>% mutate(Language = str_replace(Language, "English", "EN"))
+
+```
+
+## To avoid long lines, you can start a new line after a pipe
+
+```{r, echo=TRUE}
+
+lc_open_refine %>% 
+  drop_na(DOI) %>% 
+  mutate(Language = str_replace(Language, "English", "EN"))
+
+```
+
+## Finally, fix the Publisher space problem
+
+```{r, echo=TRUE}
+
+lc_open_refine %>% 
+  drop_na(DOI) %>% 
+  mutate(Language = str_replace(Language, "English", "EN")) %>%
+  mutate(Publisher = str_replace(Publisher, "  ", " "))
+
+```
+
+## We still have to save the results, though
+
+```{r, echo=TRUE}
+
+lc_open_refine_transformed <- lc_open_refine %>% 
+  drop_na(DOI) %>% 
+  mutate(Language = str_replace(Language, "English", "EN")) %>%
+  mutate(Publisher = str_replace(Publisher, "  ", " "))
+
+```
+
+# Export the transformed data
+
+## Easy peasy: write_csv
+
+
+```{r, echo=TRUE, eval=FALSE}
+
+write_csv(lc_open_refine_transformed, "lc_open_refine_transformed.csv")
+
+```
+
+## Warning: NAs are printed as "NA" by default
+
+```{r, echo=TRUE, eval=FALSE}
+
+write_csv(lc_open_refine_transformed, "lc_open_refine_transformed.csv", na="")
+
+```

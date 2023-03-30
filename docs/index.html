@@ -28,6 +28,70 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto.css" id="theme">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -335,30 +399,685 @@ Angela Zoss
 </div>
 
 </section>
-<section id="quarto" class="slide level2">
-<h2>Quarto</h2>
-<p>Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <a href="https://quarto.org/docs/presentations/" class="uri">https://quarto.org/docs/presentations/</a>.</p>
-</section>
-<section id="bullets" class="slide level2">
-<h2>Bullets</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes:</p>
+<section id="setup" class="slide level2">
+<h2>Setup</h2>
 <ul>
-<li>Content authored with markdown</li>
-<li>Output from executable code</li>
+<li>Go to Duke’s <a href="https://vcm.duke.edu/">Virtual Computing Manager</a> and click on <strong>“Reserve a Container”</strong></li>
+<li>Click on <strong>“reserve RStudio”</strong></li>
+<li>Now on the left, under “Containers,” select the new <strong>RStudio</strong> container</li>
+<li>Click on <strong>“Login”</strong></li>
 </ul>
 </section>
-<section id="code" class="slide level2">
-<h2>Code</h2>
-<p>When you click the <strong>Render</strong> button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<section id="rstudio" class="slide level2">
+<h2>RStudio</h2>
+<p>Development in RStudio:</p>
+<ul>
+<li>Write code in the “console”</li>
+<li>Write code in a file</li>
+</ul>
+</section>
+<section id="writing-r-code" class="slide level2">
+<h2>Writing R code</h2>
+<ul>
+<li>Type things on a line and R will execute and print the results</li>
+<li>Can break the line if it gets too long, but has to be after something like a comma, (, or [.</li>
+</ul>
+<aside class="notes">
+<p>R is a programming language that was originally designed for statistics. It’s an old enough language that there are a bunch of variations to how you can accomplish any particular task.</p>
+<p>A couple of things are pretty consistent, though. Within any block of code you are running, R code is executed line by line, top to bottom. Also, R will either expect the full command to be on the same line, or you will have to be careful about where to add a line break. You are usually safe adding a line break after a comma, a left parenthesis <code>(</code>, or a left curly brace <code>{</code>.</p>
+<p>This won’t matter too much for our simple examples, but when you have longer and longer operations, you will definitely want to break them up over multiple lines for readability.</p>
+<p>The simplest R code is just… typing some things and having R parrot them back to you.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="play-around-in-the-console" class="slide level2">
+<h2>Play around in the console</h2>
+<ul>
+<li>Type a number</li>
+<li>Type a math equation</li>
+<li>Type a letter</li>
+</ul>
+</section>
+<section id="create-a-new-r-markdown-file" class="slide level2">
+<h2>Create a new R Markdown file</h2>
+<ul>
+<li>File -&gt; New File -&gt; R Markdown…</li>
+<li>Keep the defaults</li>
+<li>Works like a Jupyter Notebook in Python:<br>
+a mix of Markdown-formatted text and blocks of code</li>
+</ul>
+</section>
+<section id="write-code-in-a-code-chunk" class="slide level2">
+<h2>Write code in a code chunk</h2>
+<ul>
+<li>Insert a new (R) code chunk</li>
+<li>Type a few lines of simple code</li>
+<li>Click the play button to execute the whole chunk</li>
+</ul>
+<aside class="notes">
+<p>If you put multiple expressions in the same code chunk, you’ll see the results underneath, one after the other.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="creating-variables" class="slide level2">
+<h2>Creating Variables</h2>
+<div style="padding-top: 2em;">
+<p><code>name_of_variable &lt;- value or expression</code></p>
 </div>
+<aside class="notes">
+<p>Eventually, though, you will want to store some of these things in the computers memory, or the R “environment.” When you store a value or the result of an operation to the environment, you’re creating a variable.</p>
+<p>In R, to create a variable, you start by typing the name of the variable, and then you use an assignment arrow (<code>&lt;-</code>, or a <code>&lt;</code> followed by a <code>-</code>) to assign some data to that variable.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="inspecting-variables" class="slide level2">
+<h2>Inspecting Variables</h2>
+<div style="padding-top: 2em;">
+<p><code>name_of_variable</code></p>
+<p><code>class(name_of_variable)</code></p>
+<p><code>typeof(name_of_variable)</code></p>
+</div>
+</section>
+<section id="r-functions" class="slide level2">
+<h2>R Functions</h2>
+<div style="padding-top: 2em;">
+<p><code>name_of_function(optional inputs)</code></p>
+</div>
+</section>
+<section id="asking-for-help" class="slide level2">
+<h2>Asking for help</h2>
+<div style="padding-top: 2em;">
+<p><code>?name_of_function</code></p>
+</div>
+</section>
+<section>
+<section id="starting-the-tibble-talk-exercise" class="title-slide slide level1 center">
+<h1>Starting the Tibble Talk Exercise</h1>
+
+</section>
+<section id="loading-the-tidyverse-package" class="slide level2">
+<h2>Loading the tidyverse package</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="loading-data" class="slide level2">
+<h2>Loading data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>lc_open_refine <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="st">'https://github.com/LibraryCarpentry/lc-open-refine/raw/gh-pages/data/doaj-article-sample.csv'</span>,</span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">.default =</span> <span class="st">"c"</span>, <span class="at">Date =</span> <span class="fu">col_date</span>(<span class="at">format=</span><span class="st">"%m/%d/%Y"</span>)) </span>
+<span id="cb2-4"><a href="#cb2-4"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<aside class="notes">
+<p>The <code>tidyverse</code> comes with some built-in data loading functions that I recommend over the ones that are included in base R. The ones I use most commonly are <code>read_csv</code> and <code>read_xlsx</code>, which is actually in a separate package called <code>readxl</code>.</p>
+<p>Both of these functions can load data either from a local data file or from something shared on the web. Let’s grab the dataset from the Open Refine lesson for Library Carpentries.</p>
+<p>The <code>read_csv()</code> function does a few things automatically. It assumes that the first row of the dataset contained the column names. It can also test each column to try to guess the data type. Usually the tidyverse data reading functions do a great job of guessing data types, but you can also specify them manually if you need to. Here, I specified that Date is a date but all others are character variables.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="explore-a-dataset" class="slide level2">
+<h2>Explore a dataset</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>lc_open_refine</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,001 × 11
+   Title        Authors DOI   URL   Date       Language Subjects ISSNs Publisher
+   &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    
+ 1 The Fisher … Flavia… 10.3… http… 2015-01-11 English  Fisher … 1099… MDPI AG  
+ 2 Aflatoxin C… Naveed… 10.3… http… 2015-01-11 English  aflatox… 2077… MDPI AG  
+ 3 Metagenomic… Rafael… 10.3… http… 2015-01-11 English  PKS|NRP… 1422… MDPI AG  
+ 4 Synthesis a… Fabriz… 10.3… http… 2015-01-11 EN       lanthan… 2304… MDPI AG  
+ 5 Performance… Magali… 10.3… http… 2015-01-11 EN       snow mo… 2306… MDPI AG  
+ 6 Dihydrochal… Xiaoxi… 10.3… http… 2015-01-11 English  Malus c… 1420… MDPI AG  
+ 7 Ionic Liqui… Anton … 10.3… http… 2015-01-11 English  ionic l… 2073… MDPI AG  
+ 8 Characteriz… Weihon… 10.3… http… 2015-01-11 English  Coryneb… 1422… MDPI AG  
+ 9 Quaternific… Tosiak… 10.3… http… 2015-01-11 English  infinit… 2073… MDPI AG  
+10 Imaging of … Christ… 10.3… http… 2015-01-11 &lt;NA&gt;     hepatoc… 2075… MDPI AG  
+# ℹ 991 more rows
+# ℹ 2 more variables: Citation &lt;chr&gt;, Licence &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="summarize-a-dataset" class="slide level2">
+<h2>Summarize a dataset</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">summary</span>(lc_open_refine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Title             Authors              DOI                URL           
+ Length:1001        Length:1001        Length:1001        Length:1001       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+      Date              Language           Subjects            ISSNs          
+ Min.   :2015-01-01   Length:1001        Length:1001        Length:1001       
+ 1st Qu.:2015-01-04   Class :character   Class :character   Class :character  
+ Median :2015-01-07   Mode  :character   Mode  :character   Mode  :character  
+ Mean   :2015-01-06                                                           
+ 3rd Qu.:2015-01-09                                                           
+ Max.   :2015-01-12                                                           
+  Publisher           Citation           Licence         
+ Length:1001        Length:1001        Length:1001       
+ Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character  
+                                                         
+                                                         
+                                                         </code></pre>
+</div>
+</div>
+</section>
+<section id="glimpse-a-dataset" class="slide level2">
+<h2>Glimpse a dataset</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">glimpse</span>(lc_open_refine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,001
+Columns: 11
+$ Title     &lt;chr&gt; "The Fisher Thermodynamics of Quasi-Probabilities", "Aflatox…
+$ Authors   &lt;chr&gt; "Flavia Pennini|Angelo Plastino", "Naveed Aslam|Peter C. Wyn…
+$ DOI       &lt;chr&gt; "10.3390/e17127853", "10.3390/agriculture5041172", "10.3390/…
+$ URL       &lt;chr&gt; "https://doaj.org/article/b75e8d5cca3f46cbbd63e91be5b32412",…
+$ Date      &lt;date&gt; 2015-01-11, 2015-01-11, 2015-01-11, 2015-01-11, 2015-01-11,…
+$ Language  &lt;chr&gt; "English", "English", "English", "EN", "EN", "English", "Eng…
+$ Subjects  &lt;chr&gt; "Fisher information|quasi-probabilities|complementarity|Phys…
+$ ISSNs     &lt;chr&gt; "1099-4300", "2077-0472", "1422-0067", "2304-6740", "2306-53…
+$ Publisher &lt;chr&gt; "MDPI AG", "MDPI AG", "MDPI AG", "MDPI AG", "MDPI AG", "MDPI…
+$ Citation  &lt;chr&gt; "Entropy, Vol 17, Iss 12, Pp 7848-7858 (2015)", "Agriculture…
+$ Licence   &lt;chr&gt; "CC BY", "CC BY", "CC BY", "CC BY", "CC BY", "CC BY", "CC BY…</code></pre>
+</div>
+</div>
+</section>
+<section id="inspect-a-column" class="slide level2">
+<h2>Inspect a column</h2>
+<div style="padding-top: 2em;">
+<p><code>select(data_frame, name_of_column)</code></p>
+</div>
+</section>
+<section id="try-selecting-the-doi-column" class="slide level2">
+<h2>Try selecting the DOI column</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">select</span>(lc_open_refine, DOI)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
+<section>
+<section id="find-and-remove-rows-with-missing-dois" class="title-slide slide level1 center">
+<h1>Find and remove rows with missing DOIs</h1>
+
+</section>
+<section id="step-1-isolating-groups-of-rows-by-a-condition" class="slide level2">
+<h2>Step 1: Isolating groups of rows by a condition</h2>
+<div style="padding-top: 2em;">
+<p><code>filter(data_frame, some test for the rows)</code></p>
+</div>
+</section>
+<section id="how-to-test-if-values-are-null" class="slide level2">
+<h2>How to test if values are null?</h2>
+<div style="padding-top: 2em;">
+<p><code>is.na(name_of_column)</code></p>
+</div>
+</section>
+<section id="find-the-na-values-in-the-doi-column" class="slide level2">
+<h2>Find the NA values in the DOI column</h2>
+<div style="padding-top: 2em;">
+<p><code>filter(lc_open_refine, is.na(DOI))</code></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">filter</span>(lc_open_refine, <span class="fu">is.na</span>(DOI))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 23 × 11
+   Title        Authors DOI   URL   Date       Language Subjects ISSNs Publisher
+   &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    
+ 1 Primality T… Musha … &lt;NA&gt;  http… 2015-01-11 English  Primali… 2067… Aurel Vl…
+ 2 Some Famili… H. M. … &lt;NA&gt;  http… 2015-01-11 English  q-Serie… 2067… Aurel Vl…
+ 3 Zweier I-Co… A. Kha… &lt;NA&gt;  http… 2015-01-11 English  Ideal|f… 2067… Aurel Vl…
+ 4 Initial Mac… Basem … &lt;NA&gt;  http… 2015-01-11 English  Analyti… 2067… Aurel Vl…
+ 5 Measure of … E. A-i… &lt;NA&gt;  http… 2015-01-11 English  Sites|M… 2067… Aurel Vl…
+ 6 Katsaras’s … Sorin … &lt;NA&gt;  http… 2015-01-11 English  Fuzzy n… 2067… Aurel Vl…
+ 7 Some Pertur… S. S. … &lt;NA&gt;  http… 2015-01-11 English  Ostrows… 2067… Aurel Vl…
+ 8 Hadamard Pr… R. M. … &lt;NA&gt;  http… 2015-01-11 English  Harmoni… 2067… Aurel Vl…
+ 9 New Čebyšev… B. Mef… &lt;NA&gt;  http… 2015-01-11 English  Čebyšev… 2067… Aurel Vl…
+10 A Mixed Int… Marija… &lt;NA&gt;  http… 2015-01-11 English  Restrai… 2067… Aurel Vl…
+# ℹ 13 more rows
+# ℹ 2 more variables: Citation &lt;chr&gt;, Licence &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="how-do-we-get-the-opposite" class="slide level2">
+<h2>How do we get the opposite?</h2>
+<div style="padding-top: 2em;">
+<p><code>!is.na(name_of_column)</code></p>
+<p><code>filter(lc_open_refine, !is.na(DOI))</code></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">filter</span>(lc_open_refine, <span class="sc">!</span><span class="fu">is.na</span>(DOI))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 978 × 11
+   Title        Authors DOI   URL   Date       Language Subjects ISSNs Publisher
+   &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    
+ 1 The Fisher … Flavia… 10.3… http… 2015-01-11 English  Fisher … 1099… MDPI AG  
+ 2 Aflatoxin C… Naveed… 10.3… http… 2015-01-11 English  aflatox… 2077… MDPI AG  
+ 3 Metagenomic… Rafael… 10.3… http… 2015-01-11 English  PKS|NRP… 1422… MDPI AG  
+ 4 Synthesis a… Fabriz… 10.3… http… 2015-01-11 EN       lanthan… 2304… MDPI AG  
+ 5 Performance… Magali… 10.3… http… 2015-01-11 EN       snow mo… 2306… MDPI AG  
+ 6 Dihydrochal… Xiaoxi… 10.3… http… 2015-01-11 English  Malus c… 1420… MDPI AG  
+ 7 Ionic Liqui… Anton … 10.3… http… 2015-01-11 English  ionic l… 2073… MDPI AG  
+ 8 Characteriz… Weihon… 10.3… http… 2015-01-11 English  Coryneb… 1422… MDPI AG  
+ 9 Quaternific… Tosiak… 10.3… http… 2015-01-11 English  infinit… 2073… MDPI AG  
+10 Imaging of … Christ… 10.3… http… 2015-01-11 &lt;NA&gt;     hepatoc… 2075… MDPI AG  
+# ℹ 968 more rows
+# ℹ 2 more variables: Citation &lt;chr&gt;, Licence &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="alternative-drop_na" class="slide level2">
+<h2>Alternative: drop_na()</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">drop_na</span>(lc_open_refine, DOI)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 978 × 11
+   Title        Authors DOI   URL   Date       Language Subjects ISSNs Publisher
+   &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    
+ 1 The Fisher … Flavia… 10.3… http… 2015-01-11 English  Fisher … 1099… MDPI AG  
+ 2 Aflatoxin C… Naveed… 10.3… http… 2015-01-11 English  aflatox… 2077… MDPI AG  
+ 3 Metagenomic… Rafael… 10.3… http… 2015-01-11 English  PKS|NRP… 1422… MDPI AG  
+ 4 Synthesis a… Fabriz… 10.3… http… 2015-01-11 EN       lanthan… 2304… MDPI AG  
+ 5 Performance… Magali… 10.3… http… 2015-01-11 EN       snow mo… 2306… MDPI AG  
+ 6 Dihydrochal… Xiaoxi… 10.3… http… 2015-01-11 English  Malus c… 1420… MDPI AG  
+ 7 Ionic Liqui… Anton … 10.3… http… 2015-01-11 English  ionic l… 2073… MDPI AG  
+ 8 Characteriz… Weihon… 10.3… http… 2015-01-11 English  Coryneb… 1422… MDPI AG  
+ 9 Quaternific… Tosiak… 10.3… http… 2015-01-11 English  infinit… 2073… MDPI AG  
+10 Imaging of … Christ… 10.3… http… 2015-01-11 &lt;NA&gt;     hepatoc… 2075… MDPI AG  
+# ℹ 968 more rows
+# ℹ 2 more variables: Citation &lt;chr&gt;, Licence &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="fix-inconsistencies-in-language" class="title-slide slide level1 center">
+<h1>Fix inconsistencies in Language</h1>
+
+</section>
+<section id="what-are-the-unique-values-of-a-column-and-how-many-records-in-each" class="slide level2">
+<h2>What are the unique values of a column? And how many records in each?</h2>
+<div style="padding-top: 2em;">
+<p><code>count(data_frame, name_of_column)</code></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">count</span>(lc_open_refine, Language)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
+  Language     n
+  &lt;chr&gt;    &lt;int&gt;
+1 EN         871
+2 ES           7
+3 English    107
+4 FR           1
+5 &lt;NA&gt;        15</code></pre>
+</div>
+</div>
+</section>
+<section id="how-to-edit-a-variable-mutate" class="slide level2">
+<h2>How to edit a variable: mutate</h2>
+<div style="padding-top: 2em;">
+<p><code>mutate(data_frame, name_of_column = new value or expression)</code></p>
+</div>
+</section>
+<section id="what-should-the-expression-do" class="slide level2">
+<h2>What should the expression do?</h2>
+<ul>
+<li>If the Language is “English”, change to “EN”</li>
+<li>Otherwise, leave the original value</li>
+</ul>
+</section>
+<section id="a-couple-of-options" class="slide level2">
+<h2>A couple of options</h2>
+<ul>
+<li>Simple if/then statement</li>
+<li>String replace</li>
+</ul>
+</section>
+<section id="ifthen" class="slide level2">
+<h2>If/then</h2>
+<div style="padding-top: 2em;">
+<p><code>ifelse(test, what to do if true, what to do if false)</code></p>
+<p><code>ifelse(Language == "English", "EN", Language)</code></p>
+</div>
+</section>
+<section id="string-replacement" class="slide level2">
+<h2>String replacement</h2>
+<div style="padding-top: 2em;">
+<p><code>str_replace(text, what to replace, what to use instead)</code></p>
+<p><code>str_replace(Language, "English", "EN")</code></p>
+</div>
+</section>
+<section id="back-to-mutate" class="slide level2">
+<h2>Back to mutate()</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">mutate</span>(lc_open_refine, <span class="at">Language =</span> <span class="fu">ifelse</span>(Language <span class="sc">==</span> <span class="st">"English"</span>, <span class="st">"EN"</span>, Language))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,001 × 11
+   Title        Authors DOI   URL   Date       Language Subjects ISSNs Publisher
+   &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    
+ 1 The Fisher … Flavia… 10.3… http… 2015-01-11 EN       Fisher … 1099… MDPI AG  
+ 2 Aflatoxin C… Naveed… 10.3… http… 2015-01-11 EN       aflatox… 2077… MDPI AG  
+ 3 Metagenomic… Rafael… 10.3… http… 2015-01-11 EN       PKS|NRP… 1422… MDPI AG  
+ 4 Synthesis a… Fabriz… 10.3… http… 2015-01-11 EN       lanthan… 2304… MDPI AG  
+ 5 Performance… Magali… 10.3… http… 2015-01-11 EN       snow mo… 2306… MDPI AG  
+ 6 Dihydrochal… Xiaoxi… 10.3… http… 2015-01-11 EN       Malus c… 1420… MDPI AG  
+ 7 Ionic Liqui… Anton … 10.3… http… 2015-01-11 EN       ionic l… 2073… MDPI AG  
+ 8 Characteriz… Weihon… 10.3… http… 2015-01-11 EN       Coryneb… 1422… MDPI AG  
+ 9 Quaternific… Tosiak… 10.3… http… 2015-01-11 EN       infinit… 2073… MDPI AG  
+10 Imaging of … Christ… 10.3… http… 2015-01-11 &lt;NA&gt;     hepatoc… 2075… MDPI AG  
+# ℹ 991 more rows
+# ℹ 2 more variables: Citation &lt;chr&gt;, Licence &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="alternative" class="slide level2">
+<h2>Alternative</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">mutate</span>(lc_open_refine, <span class="at">Language =</span> <span class="fu">str_replace</span>(Language, <span class="st">"English"</span>, <span class="st">"EN"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,001 × 11
+   Title        Authors DOI   URL   Date       Language Subjects ISSNs Publisher
+   &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    
+ 1 The Fisher … Flavia… 10.3… http… 2015-01-11 EN       Fisher … 1099… MDPI AG  
+ 2 Aflatoxin C… Naveed… 10.3… http… 2015-01-11 EN       aflatox… 2077… MDPI AG  
+ 3 Metagenomic… Rafael… 10.3… http… 2015-01-11 EN       PKS|NRP… 1422… MDPI AG  
+ 4 Synthesis a… Fabriz… 10.3… http… 2015-01-11 EN       lanthan… 2304… MDPI AG  
+ 5 Performance… Magali… 10.3… http… 2015-01-11 EN       snow mo… 2306… MDPI AG  
+ 6 Dihydrochal… Xiaoxi… 10.3… http… 2015-01-11 EN       Malus c… 1420… MDPI AG  
+ 7 Ionic Liqui… Anton … 10.3… http… 2015-01-11 EN       ionic l… 2073… MDPI AG  
+ 8 Characteriz… Weihon… 10.3… http… 2015-01-11 EN       Coryneb… 1422… MDPI AG  
+ 9 Quaternific… Tosiak… 10.3… http… 2015-01-11 EN       infinit… 2073… MDPI AG  
+10 Imaging of … Christ… 10.3… http… 2015-01-11 &lt;NA&gt;     hepatoc… 2075… MDPI AG  
+# ℹ 991 more rows
+# ℹ 2 more variables: Citation &lt;chr&gt;, Licence &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="fix-inconsistencies-in-publisher" class="title-slide slide level1 center">
+<h1>Fix inconsistencies in Publisher</h1>
+
+</section>
+<section id="explore-values-in-publisher" class="slide level2">
+<h2>Explore values in Publisher</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="fu">count</span>(lc_open_refine, Publisher)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 2
+  Publisher                                           n
+  &lt;chr&gt;                                           &lt;int&gt;
+1 Akshantala Enterprises                             13
+2 Aurel Vlaicu University Editing House              17
+3 Consejo Superior de Investigaciones Científicas    11
+4 International Union of Crystallography            858
+5 MDPI  AG                                            3
+6 MDPI AG                                            93
+7 Society of Pharmaceutical Technocrats               6</code></pre>
+</div>
+</div>
+</section>
+<section id="what-needs-to-be-fixed" class="slide level2">
+<h2>What needs to be fixed?</h2>
+<p><code>MDPI  AG</code></p>
+<p>should be</p>
+<p><code>MDPI AG</code></p>
+</section>
+<section id="maybe-just-replace-two-spaces-with-one" class="slide level2">
+<h2>Maybe just replace two spaces with one?</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="fu">mutate</span>(lc_open_refine, <span class="at">Publisher =</span> <span class="fu">str_replace</span>(Publisher, <span class="st">"  "</span>, <span class="st">" "</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,001 × 11
+   Title        Authors DOI   URL   Date       Language Subjects ISSNs Publisher
+   &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    
+ 1 The Fisher … Flavia… 10.3… http… 2015-01-11 English  Fisher … 1099… MDPI AG  
+ 2 Aflatoxin C… Naveed… 10.3… http… 2015-01-11 English  aflatox… 2077… MDPI AG  
+ 3 Metagenomic… Rafael… 10.3… http… 2015-01-11 English  PKS|NRP… 1422… MDPI AG  
+ 4 Synthesis a… Fabriz… 10.3… http… 2015-01-11 EN       lanthan… 2304… MDPI AG  
+ 5 Performance… Magali… 10.3… http… 2015-01-11 EN       snow mo… 2306… MDPI AG  
+ 6 Dihydrochal… Xiaoxi… 10.3… http… 2015-01-11 English  Malus c… 1420… MDPI AG  
+ 7 Ionic Liqui… Anton … 10.3… http… 2015-01-11 English  ionic l… 2073… MDPI AG  
+ 8 Characteriz… Weihon… 10.3… http… 2015-01-11 English  Coryneb… 1422… MDPI AG  
+ 9 Quaternific… Tosiak… 10.3… http… 2015-01-11 English  infinit… 2073… MDPI AG  
+10 Imaging of … Christ… 10.3… http… 2015-01-11 &lt;NA&gt;     hepatoc… 2075… MDPI AG  
+# ℹ 991 more rows
+# ℹ 2 more variables: Citation &lt;chr&gt;, Licence &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="chaining-operations" class="title-slide slide level1 center">
+<h1>Chaining operations</h1>
+
+</section>
+<section id="the-magrittr-pipe" class="slide level2">
+<h2>The magrittr pipe</h2>
+<div style="font-size: 200%;">
+<p><code>%&gt;%</code></p>
+</div>
+<aside class="notes">
+<p>This symbol is called a pipe, and it was originally developed for a package called magrittr. (Many R packages end with a single r, rather than “er.”)</p>
+<p>The pipe works by taking whatever the result of the previous command is and injecting or piping it straight into the next command. Let’s start with a simple example.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="fu">class</span>(<span class="st">"a"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="st">"a"</span> <span class="sc">%&gt;%</span> <span class="fu">class</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+</div>
+<aside class="notes">
+<p>class() is a basic function that returns the class of a data element in R: <code>class()</code>. Inside the parentheses, you would normally type the variable name or the data element you want to find the class of. If you want to use the pipe, though, you could start with the data element and then pipe it to the <code>class()</code> function.</p>
+<p>Those two statements are identical. When you use the pipe, whatever was on the left side of the pipe gets inserted into the parentheses of the function on the right.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="create-a-single-chain-of-data-transformations-to-remove-null-dois-and-fix-the-language-and-publisher-columns" class="title-slide slide level1 center">
+<h1>Create a single chain of data transformations to remove null DOIs and fix the Language and Publisher columns</h1>
+
+</section>
+<section id="first-drop-nas-in-doi" class="slide level2">
+<h2>First, drop NAs in DOI</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>lc_open_refine <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>(DOI)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 978 × 11
+   Title        Authors DOI   URL   Date       Language Subjects ISSNs Publisher
+   &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    
+ 1 The Fisher … Flavia… 10.3… http… 2015-01-11 English  Fisher … 1099… MDPI AG  
+ 2 Aflatoxin C… Naveed… 10.3… http… 2015-01-11 English  aflatox… 2077… MDPI AG  
+ 3 Metagenomic… Rafael… 10.3… http… 2015-01-11 English  PKS|NRP… 1422… MDPI AG  
+ 4 Synthesis a… Fabriz… 10.3… http… 2015-01-11 EN       lanthan… 2304… MDPI AG  
+ 5 Performance… Magali… 10.3… http… 2015-01-11 EN       snow mo… 2306… MDPI AG  
+ 6 Dihydrochal… Xiaoxi… 10.3… http… 2015-01-11 English  Malus c… 1420… MDPI AG  
+ 7 Ionic Liqui… Anton … 10.3… http… 2015-01-11 English  ionic l… 2073… MDPI AG  
+ 8 Characteriz… Weihon… 10.3… http… 2015-01-11 English  Coryneb… 1422… MDPI AG  
+ 9 Quaternific… Tosiak… 10.3… http… 2015-01-11 English  infinit… 2073… MDPI AG  
+10 Imaging of … Christ… 10.3… http… 2015-01-11 &lt;NA&gt;     hepatoc… 2075… MDPI AG  
+# ℹ 968 more rows
+# ℹ 2 more variables: Citation &lt;chr&gt;, Licence &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="next-add-another-step-to-change-english-to-en-in-language" class="slide level2">
+<h2>Next, add another step to change “English” to “EN” in Language</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>lc_open_refine <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>(DOI) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Language =</span> <span class="fu">str_replace</span>(Language, <span class="st">"English"</span>, <span class="st">"EN"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 978 × 11
+   Title        Authors DOI   URL   Date       Language Subjects ISSNs Publisher
+   &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    
+ 1 The Fisher … Flavia… 10.3… http… 2015-01-11 EN       Fisher … 1099… MDPI AG  
+ 2 Aflatoxin C… Naveed… 10.3… http… 2015-01-11 EN       aflatox… 2077… MDPI AG  
+ 3 Metagenomic… Rafael… 10.3… http… 2015-01-11 EN       PKS|NRP… 1422… MDPI AG  
+ 4 Synthesis a… Fabriz… 10.3… http… 2015-01-11 EN       lanthan… 2304… MDPI AG  
+ 5 Performance… Magali… 10.3… http… 2015-01-11 EN       snow mo… 2306… MDPI AG  
+ 6 Dihydrochal… Xiaoxi… 10.3… http… 2015-01-11 EN       Malus c… 1420… MDPI AG  
+ 7 Ionic Liqui… Anton … 10.3… http… 2015-01-11 EN       ionic l… 2073… MDPI AG  
+ 8 Characteriz… Weihon… 10.3… http… 2015-01-11 EN       Coryneb… 1422… MDPI AG  
+ 9 Quaternific… Tosiak… 10.3… http… 2015-01-11 EN       infinit… 2073… MDPI AG  
+10 Imaging of … Christ… 10.3… http… 2015-01-11 &lt;NA&gt;     hepatoc… 2075… MDPI AG  
+# ℹ 968 more rows
+# ℹ 2 more variables: Citation &lt;chr&gt;, Licence &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="to-avoid-long-lines-you-can-start-a-new-line-after-a-pipe" class="slide level2">
+<h2>To avoid long lines, you can start a new line after a pipe</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>lc_open_refine <span class="sc">%&gt;%</span> </span>
+<span id="cb34-2"><a href="#cb34-2"></a>  <span class="fu">drop_na</span>(DOI) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-3"><a href="#cb34-3"></a>  <span class="fu">mutate</span>(<span class="at">Language =</span> <span class="fu">str_replace</span>(Language, <span class="st">"English"</span>, <span class="st">"EN"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 978 × 11
+   Title        Authors DOI   URL   Date       Language Subjects ISSNs Publisher
+   &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    
+ 1 The Fisher … Flavia… 10.3… http… 2015-01-11 EN       Fisher … 1099… MDPI AG  
+ 2 Aflatoxin C… Naveed… 10.3… http… 2015-01-11 EN       aflatox… 2077… MDPI AG  
+ 3 Metagenomic… Rafael… 10.3… http… 2015-01-11 EN       PKS|NRP… 1422… MDPI AG  
+ 4 Synthesis a… Fabriz… 10.3… http… 2015-01-11 EN       lanthan… 2304… MDPI AG  
+ 5 Performance… Magali… 10.3… http… 2015-01-11 EN       snow mo… 2306… MDPI AG  
+ 6 Dihydrochal… Xiaoxi… 10.3… http… 2015-01-11 EN       Malus c… 1420… MDPI AG  
+ 7 Ionic Liqui… Anton … 10.3… http… 2015-01-11 EN       ionic l… 2073… MDPI AG  
+ 8 Characteriz… Weihon… 10.3… http… 2015-01-11 EN       Coryneb… 1422… MDPI AG  
+ 9 Quaternific… Tosiak… 10.3… http… 2015-01-11 EN       infinit… 2073… MDPI AG  
+10 Imaging of … Christ… 10.3… http… 2015-01-11 &lt;NA&gt;     hepatoc… 2075… MDPI AG  
+# ℹ 968 more rows
+# ℹ 2 more variables: Citation &lt;chr&gt;, Licence &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="finally-fix-the-publisher-space-problem" class="slide level2">
+<h2>Finally, fix the Publisher space problem</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>lc_open_refine <span class="sc">%&gt;%</span> </span>
+<span id="cb36-2"><a href="#cb36-2"></a>  <span class="fu">drop_na</span>(DOI) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-3"><a href="#cb36-3"></a>  <span class="fu">mutate</span>(<span class="at">Language =</span> <span class="fu">str_replace</span>(Language, <span class="st">"English"</span>, <span class="st">"EN"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb36-4"><a href="#cb36-4"></a>  <span class="fu">mutate</span>(<span class="at">Publisher =</span> <span class="fu">str_replace</span>(Publisher, <span class="st">"  "</span>, <span class="st">" "</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 978 × 11
+   Title        Authors DOI   URL   Date       Language Subjects ISSNs Publisher
+   &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    
+ 1 The Fisher … Flavia… 10.3… http… 2015-01-11 EN       Fisher … 1099… MDPI AG  
+ 2 Aflatoxin C… Naveed… 10.3… http… 2015-01-11 EN       aflatox… 2077… MDPI AG  
+ 3 Metagenomic… Rafael… 10.3… http… 2015-01-11 EN       PKS|NRP… 1422… MDPI AG  
+ 4 Synthesis a… Fabriz… 10.3… http… 2015-01-11 EN       lanthan… 2304… MDPI AG  
+ 5 Performance… Magali… 10.3… http… 2015-01-11 EN       snow mo… 2306… MDPI AG  
+ 6 Dihydrochal… Xiaoxi… 10.3… http… 2015-01-11 EN       Malus c… 1420… MDPI AG  
+ 7 Ionic Liqui… Anton … 10.3… http… 2015-01-11 EN       ionic l… 2073… MDPI AG  
+ 8 Characteriz… Weihon… 10.3… http… 2015-01-11 EN       Coryneb… 1422… MDPI AG  
+ 9 Quaternific… Tosiak… 10.3… http… 2015-01-11 EN       infinit… 2073… MDPI AG  
+10 Imaging of … Christ… 10.3… http… 2015-01-11 &lt;NA&gt;     hepatoc… 2075… MDPI AG  
+# ℹ 968 more rows
+# ℹ 2 more variables: Citation &lt;chr&gt;, Licence &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="we-still-have-to-save-the-results-though" class="slide level2">
+<h2>We still have to save the results, though</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>lc_open_refine_transformed <span class="ot">&lt;-</span> lc_open_refine <span class="sc">%&gt;%</span> </span>
+<span id="cb38-2"><a href="#cb38-2"></a>  <span class="fu">drop_na</span>(DOI) <span class="sc">%&gt;%</span> </span>
+<span id="cb38-3"><a href="#cb38-3"></a>  <span class="fu">mutate</span>(<span class="at">Language =</span> <span class="fu">str_replace</span>(Language, <span class="st">"English"</span>, <span class="st">"EN"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb38-4"><a href="#cb38-4"></a>  <span class="fu">mutate</span>(<span class="at">Publisher =</span> <span class="fu">str_replace</span>(Publisher, <span class="st">"  "</span>, <span class="st">" "</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
+<section>
+<section id="export-the-transformed-data" class="title-slide slide level1 center">
+<h1>Export the transformed data</h1>
+
+</section>
+<section id="easy-peasy-write_csv" class="slide level2">
+<h2>Easy peasy: write_csv</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="fu">write_csv</span>(lc_open_refine_transformed, <span class="st">"lc_open_refine_transformed.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="warning-nas-are-printed-as-na-by-default" class="slide level2">
+<h2>Warning: NAs are printed as “NA” by default</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="fu">write_csv</span>(lc_open_refine_transformed, <span class="st">"lc_open_refine_transformed.csv"</span>, <span class="at">na=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="footer footer-default">
 
 </div>
-</section>
+</section></section>
     </div>
   </div>
 
