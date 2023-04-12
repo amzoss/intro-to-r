@@ -1,0 +1,1 @@
+Christopher Erdmann. (2019). Library Carpentry SQL Lesson - DOAJ Article Sample Database [Data set]. Zenodo. https://doi.org/10.5281/zenodo.2822005

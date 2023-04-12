@@ -1,0 +1,293 @@
+---
+title: "Working with Multiple Tables"
+author: "Angela Zoss"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+---
+
+```{r}
+
+# Run the first time you start working with this file
+
+install.packages("tidyverse")
+
+
+```
+
+```{r}
+
+# Loading required packages
+
+library(tidyverse)
+
+```
+
+## Loading data
+
+Let's load the dataset from the SQL lesson for Library Carpentries. (I downloaded
+the original data, loaded it into the SQLite software, then exported each table
+as a separate .csv file.)
+
+```{r, message=FALSE}
+
+articles <- read_csv("data_files/articles.csv")
+journals <- read_csv("data_files/journals.csv")
+languages <- read_csv("data_files/languages.csv")
+licences <- read_csv("data_files/licences.csv")
+publishers <- read_csv("data_files/publishers.csv")
+
+```
+
+## Select column(s)
+
+Review the `select()` function from Exercise 1. Try selecting a few columns
+from the articles table, like `Title` and `Citation_Count`.
+
+```{r, eval=F}
+
+articles %>% 
+  select(_____)
+
+```
+
+## Sorting the results
+
+In the tidyverse, you can sort a table by using the function `arrange()` and then
+specifying what column you want to sort by. The `Citation_Count` column might be
+a good place to start. If we limit to just a few columns, it will be easier to
+see the results.
+
+```{r, eval=F}
+
+articles %>% 
+  select(Title, Citation_Count) %>%
+  arrange(_____)
+
+```
+
+What if we want the sort to start with the largest values? In SQL, we used this syntax:
+
+```
+SELECT *
+FROM table name
+ORDER BY column_name_1 DESC;
+```
+
+In tidyverse, we can surround the name of a column with the helper function `desc()`
+to reverse the sort on that column.
+
+```{r}
+
+articles %>% 
+  select(Title, Citation_Count) %>%
+  arrange(desc(Citation_Count))
+
+```
+
+## Challenge #1
+
+Write a query that returns `Title`, `First_Author`, `ISSNs` and `Citation_Count` from the articles table, ordered by the top cited article and alphabetically by title.
+
+```{r}
+
+```
+
+## Filtering
+
+In SQL, we used the `WHERE` keyword to limit our table to a specific
+set of rows. In tidyverse, we use the `filter()` command for that. The
+ways we specify our tests, though, will be pretty similar. 
+
+This general SQL example:
+
+```
+SELECT *
+FROM table name
+WHERE column_name_1 = 'some value';
+```
+
+would look like this in R:
+
+```
+table %>%
+  filter(column_name_1 == 'some value')
+```
+
+Try to filter articles to just the rows where `Citation_Count` is exactly 10.
+
+```{r, eval=F}
+
+articles %>% 
+  select(Title, Citation_Count) %>%
+  filter(_____)
+
+```
+
+In SQL, combining multiple tests looks like this:
+
+```
+SELECT *
+FROM table name
+WHERE (column_name_1 = 'some value') AND
+(column_name_2 = 'some other value');
+```
+
+In tidyverse, you just use `&` to combine tests inside the
+`filter()`.
+
+```
+table %>%
+  filter(column_name_1 == 'some value' & 
+         column_name_2 == 'some other value')
+```
+
+The equivalent to SQL's `OR` in tidyverse is a single `|` character.
+
+```
+table %>%
+  filter(column_name_1 == 'some value' | 
+         column_name_2 == 'some other value')
+```
+
+### Fuzzy Filters
+
+In SQL, we learned about using `LIKE` to add a wildcard into our filter. When we
+used `LIKE`, we could add `%` into the search term to indicate the wildcard.
+
+```
+SELECT *
+FROM table name
+WHERE column_name_1 LIKE ‘%part of value%’;
+```
+
+In tidyverse, there are various string functions that can be used to search for
+substrings. One similar approach would be used a function called `str_detect()`. 
+This function works like `str_replace()`, which we learned in the previous exercise.
+The first argument is the column name, and then you include the string sequence 
+you're looking for.
+
+For example, let's look for titles that contain "Classification."
+
+```{r}
+
+articles %>%
+  select(Title, Citation_Count) %>%
+  filter(str_detect(Title, "Classification"))
+
+```
+
+I highly recommend browsing through all of the `str_` functions in the `stringr` package. 
+You can go to the Packages tab and then click on `stringr` to see the package 
+functions in a list.
+
+## Challenge #2
+
+Write a query that returns `Title`, `First_Author`, `Subjects`, `ISSNs`, `Month` and `Year` for all papers where `Subjects` contains “computer” and that have more than 8 citations.
+
+## Aggregation
+
+Aggregation and calculation go together. When you want to summarize across
+multiple rows in a table, you first have to aggregate those rows into a
+group, and then you have specify what calculation you want to apply to the
+values in that column.
+
+In SQL, you specify the columns you want to group by, and then you apply
+aggregation functions to the remaining columns. 
+
+```
+SELECT column_name_1, AVG(column_name_2)
+FROM table name
+GROUP BY column_name_1;
+```
+
+The same is true in tidyverse. There is a `group_by()` function that takes
+a list of columns. After you group, you then use `summarise()` to specify
+aggregations for any ungrouped columns you want to keep. You don't have to explicitly
+select the grouped columns for them to show up in the result.
+
+The `summarise()` function works like `mutate()`. The first thing you write is
+the name you want the new column to have, then you type `=`, then you specify
+how you want to aggregate one of the original columns.
+
+```{r}
+
+articles %>%
+  group_by(First_Author) %>%
+  summarise(total_citations = sum(Citation_Count))
+
+
+```
+
+## Challenge #3
+
+Write a query using an aggregate function that returns the number of article titles per ISSNs, sorted by title count in descending order.
+
+(Hint: in SQL, we had a function named `COUNT`. In tidyverse, the equivalent function is `n()`.)
+
+```{r}
+
+
+
+```
+
+Note: aggregation functions can get more sophisticated than just a count or an average.
+Check out the dplyr cheat sheet (Help -> Cheat Sheets -> Data Transformation with dplyr)
+for more options.
+
+## Challenge #4
+
+Write a query that returns, from the articles table, the average `Citation_Count` for each journal ISSN, but only for the journals with 5 or more citations on average.
+
+```{r}
+
+```
+
+## Joins
+
+Databases really shine when it comes to blending data from multiple
+tables. Being able to do this in R is where you can really move past
+what's easy to do in, say, OpenRefine.
+
+In SQL, a basic join is:
+
+```
+SELECT *
+FROM table_name_1
+JOIN table_name_2
+ON table_name_1.column_name = table_name_2.column_name;
+```
+
+In tidyverse, you start with one table and then use the 
+`left_join()` function to bring in the second table. 
+
+If there are matching column names, they'll be matched automatically.
+If you want to specify which columns should be matched, you can add 
+`by = join_by(column_in_first_table == column_in_second_table)`
+
+```{r}
+
+articles %>% 
+  left_join(languages, by = join_by(LanguageId == id))
+
+```
+
+## Challenge #5
+
+Write a query that JOINS the articles and journals tables and that returns the Journal_Title, total number of articles published and average number of citations for every journal ISSN.
+
+```{r}
+
+```
+
+## Challenge #6
+
+Write a query that returns the Journal_Title, Publisher name, and number of articles published, ordered by number of articles in descending order.
+
+```{r}
+
+```
+
